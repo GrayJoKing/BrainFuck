@@ -128,8 +128,15 @@ Check if the number is negative (a 255 will be in front if it is)
 	<(45+++++++++++++++++++++++++++++++++++++++++++++).[-]>
 	get the one's complement of the number (which I accidentally recreated *shrug*)
 	[<(11+++++++++++)>[-<->]>]<<+
-	Move the numbers back into place and exit the loop
-	[[->+<]<]>>+<
+	Carries the one if need be
+	[(11-----------) [11(+++++++++++)>>>] < [+>>>>+<<<]<]
+	Moves the digits back if the one was carried
+	>>>
+	[
+		[-<<<+>>>]
+		>
+	]
+	<<<<[<]>+<
 ]
 >-
 
