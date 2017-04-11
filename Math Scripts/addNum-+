@@ -1,4 +1,4 @@
-Adds all multidigit numbers with pluses separating them
+Adds and subtracts all multidigit numbers with pluses and minuses separating them
 Goes up to 10^10 (you can increase the power easily by adding plus rights to the initial setup)
 
 Some notes:
@@ -15,12 +15,12 @@ Some notes:
 
 Sets up the board in the format
 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 1 1 0
-(>>>+>+>+>+>+>>>>>>)+>+>
+(>>>+>+>+>+>+>+>+>+>+>>>>>>)+>+>
 
 Gets first input and puts it after the signChunk
 >,
 [
-	gets all numbers and places them after the signChunk in order until it reaches a plus sign or EOF
+	gets all numbers and places them after the signChunk in order until it reaches a plus minus or EOF
 	[
 		(45---------------------------------------------)
 		[>>]<[<]<[<]<[>>[>]]>>[+[>]>[>]-->>>]<<
@@ -32,7 +32,7 @@ Gets first input and puts it after the signChunk
 	Checks if the sign of this number is negative
 	<<[<]<[<]>>-
 	[
-		Invert the number if the sign is negative
+		Turn the number into 10^x minus the number where x is the length of the number
 		[>]>[>]<
 		[>(11+++++++++++)<[->-<]<]
 		>>[[-<+>]>]
@@ -93,14 +93,17 @@ Gets first input and puts it after the signChunk
 	Check if the sign is negative
 	<[<]>>-
 	[
+		if negative subtract 10^x where x is the length of the inputted number
 		<[<]<[<]<<<-
 		[<- [>++>]>[>>>(10++++++++++)<<<+>]<<-]
 		>>>>[>]>>-
+		overall with subtraction it becomes
+		original minus 10^x plus (10^x minus number)
+		which simplifies to just original minus number and is way easier to code
 	]
 	<
 	[->+<]
 	+
-
 
 	Move the pointer to the number at the right of the 0chunk
 	<[<]<[<]>
@@ -117,14 +120,16 @@ Gets first input and puts it after the signChunk
 ]
 Moves to the very beginning of the number
 <<[<]<<<<<[<]>
-Check if the number is all negative (a 255 will be in front if it is)
+Check if the number is negative (a 255 will be in front if it is)
 +
 [<<]>
 [
-	<(45+++++++++++++++++++++++++++++++++++++++++++++).[-]
-	>
-	[<(11+++++++++++)>[-<->]>]
-	<<+[[->+<]<]>>+<
+	prints a dash
+	<(45+++++++++++++++++++++++++++++++++++++++++++++).[-]>
+	get the one's complement of the number (which I accidentally recreated *shrug*)
+	[<(11+++++++++++)>[-<->]>]<<+
+	Move the numbers back into place and exit the loop
+	[[->+<]<]>>+<
 ]
 >-
 
