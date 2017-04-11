@@ -106,8 +106,11 @@ Gets first input and puts it after the signChunk
 	+
 
 	Move the pointer to the number at the right of the 0chunk
-	<[<]<[<]>
+	<[<]<[<]<<<<
 
+	Carries the one if need be
+	[(11-----------) [11(+++++++++++)>>>] < [+>>>>>+<<<<]<]
+	>>>>[<]>
 
 	Move the zero chunk back to the signChunk one number at a time
 	[
