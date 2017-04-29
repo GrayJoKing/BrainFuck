@@ -1,10 +1,7 @@
-NOT FINISHED:
-This mostly works but for longer programs there seems to be a bug somewhere
-Input code then have input after an !
-	The ! is optional
-The code is also shamefully inefficient
+Version 1:2
+Hopefully a little more efficient by redesigning the way it checks what char the current instruction is
 
-gets code ignoring anything that isn't a special char and stopping at exclamation mark to get input
+gets code ignoring anything that isn't a special char and stopping at an exclamation mark to get input
 assign different numbers to certain chars
 1 = minus
 2 = plus
@@ -36,8 +33,9 @@ in form
 		(14--------------)[>]>
 		[left <+++>>+>>]<<<
 		--[>]>
-		[right <++++>>+>>]<<<
-		(29-----------------------------)[>]>
+		[right <++++>>+>>]<
+		(29+++++[-<<------>>]<<+)
+		[>]>
 		[start loop <+++++>>+>>]<<<
 		--[>]>
 		[end loop <++++++>>+>>]<<
@@ -55,30 +53,28 @@ initialise the cells in the form
 >>>>+<<<<<
 [<]>
 [
-	-[>]>
+	-[<<]>
 	[minus
-		<-[>]>>>>-<<<
+		[>]>>>>-<<<<<[<]<
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[plus
-		<-[>]>>>>+<<<
+		[>]>>>>+<<<<<[<]<
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[left
-		<-[>]>>>[>>]>
+		[>]>>>[>>]>
 		[
 			->
 			[-<<<<[<<]>+>[>>]>>]<
 		]
 		<+
 		[<[->>+<<]<]
+		<<[<]<
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[right
-		<-[>]>>>
+		[>]>>>
 		[>[-<<+>>]>]
 		<+<-<<[<<]>
 		[->[>>]>>+<<<<[<<]>]
@@ -87,86 +83,77 @@ initialise the cells in the form
 			[>>]+
 			[<[->>+<<]<]
 			>+>-<<
-		]<
-
+		]
+		<<<[<]<
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[start loop
-		<-[>]>>>>[<]<
+		[>]>>>>[<]<<<[<]<<
 		[
-			<<<<[<]
+			[<]<<
 			(5+++++)
-			>+>
+			>>>
 			[
 				checks if start loop
 				(5-----)
-				[>]>
-				[>[>]>>+<]
-				<<[<]<<[<]>[>]>
+				[<<]>
+				[[>]>+<<[<]<]
 				checks if end loop
-				-[->[>]]>
+				>-[<<]>
 				[
-					[>]>>
-					[-<<<[<]-[>]>]
-					<<<[>]>
+					[>]>
+					[-<<[<]<<]
+					>
 				]
-				<<[<]<
-				[>>(7+++++++)[-<+>]]
-				>[>]>
-				[<+[>]>>]
-				<<[<]
+				<<
+				[>>>(6++++++)[-<<+>>]]
 				>
 			]
+			<<[<]>[<+<<]
 		]
-		<<[<]<[>>[>]>]
+		>
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[end loop
-		<-[>]>>>>
+		<->[>]>>>>[<]<<<
 		[
-			<<<<<[<]>(7+++++++)<<
+			[<]>(7+++++++)<<<
 			[
 				checks if end loop
 				(6------)
-				[>>[>]]>>
+				[>>]<
 				[
 					add one to marker
-					[>]>+>
+					>>>>[>]>+<<[<]<
 				]
-				<<<[<]<
+				<
 				checks if start loop
-				+[>>[>]]>>
+				+[>>]<
 				[
-					[>]>
+					>>>>[>]>
 					if marker not 0
 					[->]<<
 					if marker is 0
-					[>>>]<<[>>>>]
+					[>>>]<[<]<
 				]
-				<<[>>>>]<
-				[[<]<(5+++++)[->+<]]<
+				>>
+				[<<<(5+++++)[->>+<<]]<
 			]
-			<[<]--[>]>>
+			<<[<]--[>]>
 		]
-		<[<]>[<]<
+		<<[<]>+<
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[input
-		<-[>]>>>>,<<<
+		[>]>>>>,<<<<<[<]<
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[output
-		<-[>]>>>>.<<<
+		[>]>>>>.<<<<<[<]<
 	]
-	<<[<]>
-	-[>]>
+	>-[<<]>
 	[end-]
-	<<[<]
-	(10++++++++++)>
-	[+<->]>
+	<(9+++++++++)>>
+	[+<<->>]>
 
 ]
