@@ -1,5 +1,6 @@
 Adds all multidigit numbers with pluses separating them
 Goes up to 10^10 (you can increase the power easily by adding plus rights to the initial setup)
+(will improve on this)
 
 Some notes:
 	The 255 at the end of the initialisation will be referred to as the 255marker
