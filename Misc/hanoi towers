@@ -5,11 +5,9 @@ Input a multi digit number up to your cell size
 Needs 5x plus 22 cells where x is the size of the tower
 WARNING:
 	Just like the Hanoi Tower this program will increase the number of instructions at a exponential rate
-	A tower of size 10 takes 20 million instructions
+	A tower of size 10 takes 21 million instructions
 
-This doesn't quite work yet; I got the algorithm that checks which direction the next tile is wrong
-
-Plan (note: this plan changed slightly in implementation)
+Plan (note: this plan changed a lot in implementation)
 N = Inputted number
 
 space:
@@ -22,20 +20,18 @@ gap:
 0
 N:
 N (permanent)
-Base:
-(Record of what peg the biggest piece is on)
-pileCounter:
-(number of tiles on the base tile %2)
-tileCounter:
-(Counter for size of current tile (initially N))
+greaterTotal:
+(counter for the amount of disks on top of the next larger disk)
+diskCounter:
+(Counter for size of current disk (initially N))
 gap2:
 0 0 0
-currentTile:
+currentdisk:
 1/2/3
-tileBuffer:
-(0 0 0 Markers showing what position to place the next tile in based on currentTile)
+diskBuffer:
+(0 0 0 Markers showing what position to place the next disk in based on currentdisk)
 output:
-(repeated sections of 0 n n n where the ns represent the tile in this location)
+(repeated sections of 0 n n n where the ns represent the disk in this location)
 printer
 0 0 " "/"#" N 0
 
@@ -50,19 +46,19 @@ start loop
 	Go to end of record
 	check value and move it to end of recordTemp
 	if it's 1
-		add N%2 plus 1 to currentTile
+		add N%2 plus 1 to currentdisk
 		add N%2 plus 1 to base
-	add one to currentTile
+	add one to currentdisk
 	add one to base
 	add one to pileCounter
-	Duplicate N to gap and tileCounter
+	Duplicate N to gap and diskCounter
 		Move gap back to N
-	spread currentTile over tileBuffer
-	duplicate tileCounter to gap2 and 3 spaces over from whatever is marked in tileBuffer
-		move gap2 back to tileCounter and decrement it
-		remove marker from tileBuffer
-		move currentTile back from gap2
-	move to tileCounter
+	spread currentdisk over diskBuffer
+	duplicate diskCounter to gap2 and 3 spaces over from whatever is marked in diskBuffer
+		move gap2 back to diskCounter and decrement it
+		remove marker from diskBuffer
+		move currentdisk back from gap2
+	move to diskCounter
 	start loop
 		move to end of record
 		check if this bit doesn't match the previous bit
@@ -72,29 +68,29 @@ start loop
 		if so:
 			check if pileCounter is 1 or 2
 			if 1
-				add one to currentTile
-				if currentTile is 4
+				add one to currentdisk
+				if currentdisk is 4
 					set to 1
 			if 2
-				subtract one from currentTile
-				if currentTile is 0:
+				subtract one from currentdisk
+				if currentdisk is 0:
 					add 3
-		spread currentTile over tileBuffer
-			move gap2 back to currentTile
-		check if base = currentTile
+		spread currentdisk over diskBuffer
+			move gap2 back to currentdisk
+		check if base = currentdisk
 		if so
 			subtract one from pileCounter
 			if pilecounter is 0
 				add 2 to pilecounter
 
-		duplicate tileCounter to gap2 and whatever is marked in tileBuffer
-			move gap2 back to tileCounter and decrement it
-			reset tileBuffer
-		end on tileCounter
+		duplicate diskCounter to gap2 and whatever is marked in diskBuffer
+			move gap2 back to diskCounter and decrement it
+			reset diskBuffer
+		end on diskCounter
 	end loop
 
 	move record left two spaces
-	reset base tileCounter pileCounter currentTile
+	reset base diskCounter pileCounter currentdisk
 	set start of output to 1
 	create printer
 		put 1 at end of input
@@ -161,49 +157,38 @@ start loop
 	-[->>+<]>>
 	if it's 1
 	[
-
-		add N%2 to base
-			>[>>>++<[<+>>-[>>]<[>++>]<<-]+++>[-<->]<[->+<]
-		<[->+<]]
-		add 2 to base
-		>>++>+<<<
-		add one to pileCounter
-		[>>>+<<<]
+		add N%2 to currentdisk and greaterTotal
+		>>>++<[<+>>-[>>]<[>++>]<<-]<[->+<]>>[->+<]+<<
 	]
-	>>
-	add one to base
-	+
-	add one to pileCounter
-	>+
-	Duplicate N to tileCounter
-	<<[-<+>>>>+<<<]<[->+<]
+	>>>
+	add one to currentdisk and move into position
+	+[->>>>+<<<<]
+	Duplicate N to diskCounter
+	<<[-<+>>>+<<]<[->+<]
 
-	duplicate base to currentTile
-	>>[-<<+>>>>>>>>+<<<<<<]<<[->>+<<]
+	>>+>>>>>
 
-	>>>>>>>>
-
-	spread currentTile over tileBuffer
+	spread currentdisk over diskBuffer
 	[[>]+[<]>-]
 
-	duplicate tileCounter to gap2 and 4 spaces over from whatever is marked in tileBuffer
+	duplicate diskCounter to gap2 and 4 spaces over from whatever is marked in diskBuffer
 	<<<<+
 	[
 		->+>>>>[>]>>>+<<<<[<]<<<<
 	]
-	Decrement tileCounter (and move it back into place)
+	Decrement diskCounter (and move it back into place)
 	>--[-<+>]
 
-	condense marker from tileBuffer back into currentTile
+	condense marker from diskBuffer back into currentdisk
 	>>>>[>]<
 	[>[-<+>]<<]>[-<+>]
 
-	move to tileCounter
+	move to diskCounter
 	<<<<<
 	start loop
 	[
 		move to end of record
-		<<<<<[<]>
+		<<<<[<]>
 		check if this bit doesn't match the previous bit
 		to do so
 			add them together and subtract two
@@ -213,89 +198,76 @@ start loop
 			[-<+>[-<->]]<
 		if so:
 		[
-			->>[>]>>>
-			check if pileCounter is 1 or 2
-			-
-			if 2
+
+			->>[>]>
+			add N and greaterCounter
+			[-<+>>>>+<<<]>[-<+>>>+<<]
+			<+[->+<]<[->+<]
+			>[>]
+
+			get modulo 2
+			++<[>-[>]>>[<<++>>>]<<<<-]
+			+>-
+			if it's 0
 			[
-				(to preserve pileCounter)
-				->>+
-				subtract one from currentTile
-				>>>-
-				if currentTile is 0:
-				[>]<<<
+				-<->+>>
+				subtract one from currentdisk
+				-
+				if currentdisk is 0:
+				[>]<<
 					add 3
-					[>>>+++<<]
-				>
+					[>>+++<]
+				<-
 			]
 			<
 			if 1
 			[
-				add one to currentTile
-				>>>>>>+
-				check if currentTile is 4
-				<++++>[-<->]
+				add one to currentdisk
+				->>++++>+
+				check if currentdisk is 4
+				[-<->]
 				++++<[-<+>>-<]+<[[-]>-<]>
 				if so
 				[
-					set currentTile to 1
+					set currentdisk to 1
 					->---
 					<
 				]
-				<
+				<<
 			]
-			restore pileCounter
-			<+[-<<+>>]
-			<<<<<<[<]
+			<<<<<[<]<
 		]
-		>>[>]>>(on base)
+		>>[>]>>+>>>>>
 
-		check if base = currentTile
-		duplicate base
-		[->>>+>>+<<<<<]>>>[-<<<+>>>]
-		>>>>>>+[<<<-<-<+[>]>>]>[<]
-		<<[[-<<+>>]>]
-		<[[-]>]
-		if so
-		<[
-			subtract one from pileCounter
-			<<<-
-			if pilecounter is 0
-				add 2 to pilecounter
-				[>>>>]>[<++>>>>>]<
-		]
-		<[->>+<<]>>>>>-<<<
-
-		spread currentTile over tileBuffer
+		spread currentdisk over diskBuffer
 		[[>]+[<]>-]
-		>[>]<[>>>>]+[<<<<]
-		duplicate tileCounter to gap2 and whatever is marked in tileBuffer
-		<<<[>]<[>>>>+[>]<[>>>>]<<<<+[<<<<]<<<[>]<-]
+		>[>]<[>>>>]+[<<<<]>>>[<]
+		duplicate diskCounter to gap2 and whatever is marked in diskBuffer
+		<<<<[>>>>+[>]<[>>>>]<<<<+[<<<<]>>>[<]<<<-]
 
-		move tileCounter back and decrement
+		move diskCounter back and decrement
 		>>>>-[-<<<<+>>>>]
 
-		condense marker from tileBuffer back into currentTile
+		condense marker from diskBuffer back into currentdisk
 		>[>]<
 		[>[-<+>]<<]>[-<+>]
 
 
-		end on tileCounter
+		end on diskCounter
 		<<<<<
 	]
 
-	reset base pileCounter currentTile
-	<[-]<[-]
+	<[-]<
 	copy N to end of input
 		copy N over
-		<[->+>>>>>>>>>>>[>>>>]>[>>>>]>[>>>>]<<<+<[<<<<]<[<<<<]<[<<<<]<<<<<<<<]
+		[->+>>>>>>>>>>[>>>>]>[>>>>]>[>>>>]<<<+<[<<<<]<[<<<<]<[<<<<]<<<<<<<]
 		>[-<+>]
 	set start of output to 1
-	>>>>>>>>>>
+	>>>>>>>>>
 	move to end of output
-	>[>>>>]>[>>>>]>[>>>>]<<<[->>+<<]>>>
+	>[>>>>]>[>>>>]>[>>>>]>
 	create " " at end of output
-	>(8++++++++)[-<(4++++)>]<<<<
+	(8++++++++)[-<(4++++)>]<<<<[->>+<<]
 	put pointer on end of output
 	add one
 	<<<<+
@@ -303,7 +275,7 @@ start loop
 	[
 		subtract 1
 		-
-		now we print out the tiles
+		now we print out the disks
 		>+>+>+
 		[
 			[>]>>[->>+>++<<<]>>[-<<+>>]>-<<<<<<[<]>-
@@ -340,7 +312,7 @@ start loop
 	(10++++++++++).[-]
 
 	move to record
-	(16<<<<<<<<<<<<<<<<)[<]>
+	(15<<<<<<<<<<<<<<<)[<]>
 
 	move record left two spaces
 	[[-<<+>>]>]
