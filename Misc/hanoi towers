@@ -1,0 +1,360 @@
+A brainfuck program that solves an inputted size Hanoi Tower
+By Jo King
+Non wrapping non negative cells
+Input a multi digit number up to your cell size
+Needs 5x plus 22 cells where x is the size of the tower
+WARNING:
+	Just like the Hanoi Tower this program will increase the number of instructions at a exponential rate
+	A tower of size 10 takes 20 million instructions
+
+This doesn't quite work yet; I got the algorithm that checks which direction the next tile is wrong
+
+Plan (note: this plan changed slightly in implementation)
+N = Inputted number
+
+space:
+0 0
+record:
+(N spaces showing the positions of the pieces in binary notation where 2=0 1=1)
+recordTemp:
+0 0 (temp places for record to be)
+gap:
+0
+N:
+N (permanent)
+Base:
+(Record of what peg the biggest piece is on)
+pileCounter:
+(number of tiles on the base tile %2)
+tileCounter:
+(Counter for size of current tile (initially N))
+gap2:
+0 0 0
+currentTile:
+1/2/3
+tileBuffer:
+(0 0 0 Markers showing what position to place the next tile in based on currentTile)
+output:
+(repeated sections of 0 n n n where the ns represent the tile in this location)
+printer
+0 0 " "/"#" N 0
+
+move to cell 3
+get input
+simplify to one cell (now N)
+create N many cells to the right (now record)
+count how many cells by moving record one to the left (recreates N at right side)
+move N into position
+
+start loop
+	Go to end of record
+	check value and move it to end of recordTemp
+	if it's 1
+		add N%2 plus 1 to currentTile
+		add N%2 plus 1 to base
+	add one to currentTile
+	add one to base
+	add one to pileCounter
+	Duplicate N to gap and tileCounter
+		Move gap back to N
+	spread currentTile over tileBuffer
+	duplicate tileCounter to gap2 and 3 spaces over from whatever is marked in tileBuffer
+		move gap2 back to tileCounter and decrement it
+		remove marker from tileBuffer
+		move currentTile back from gap2
+	move to tileCounter
+	start loop
+		move to end of record
+		check if this bit doesn't match the previous bit
+			add them together and subtract two
+				if this is not 0 subtract one
+					if this is 1 then they do not match
+		if so:
+			check if pileCounter is 1 or 2
+			if 1
+				add one to currentTile
+				if currentTile is 4
+					set to 1
+			if 2
+				subtract one from currentTile
+				if currentTile is 0:
+					add 3
+		spread currentTile over tileBuffer
+			move gap2 back to currentTile
+		check if base = currentTile
+		if so
+			subtract one from pileCounter
+			if pilecounter is 0
+				add 2 to pilecounter
+
+		duplicate tileCounter to gap2 and whatever is marked in tileBuffer
+			move gap2 back to tileCounter and decrement it
+			reset tileBuffer
+		end on tileCounter
+	end loop
+
+	move record left two spaces
+	reset base tileCounter pileCounter currentTile
+	set start of output to 1
+	create printer
+		put 1 at end of input
+		create " " at end of output
+		duplicate N to end of output
+	put pointer on start of right most output
+	add one
+	start loop
+		subtract 1
+		add one each of the 3 cells to the right
+		move pointer to rightmost cell of those 3
+		start loop
+			print " "
+			subtract this from N (keeping a copy of both N and the cell)
+			print (result minus 1) many " "s
+			print the cell number of "#"s
+			print (result minus 1) many " "s
+			remove result
+			remove cell
+			move " " and N over one to the left
+			move left one from the start loop cell
+		end loop
+		move 4 over
+		if this cell is 0
+			add one
+		else
+			subtract one
+	end loop
+	delete printer
+	add one to record
+	if record overflows
+		exit loop
+	else
+		move to N
+end loop
+
+START OF ACTUAL PROGRAM
+
+get input
+simplify to one cell (now N)
+>,
+[
+	<(6++++++)[->(8--------)<]>
+	>[->(10++++++++++)<]>[-<+>]
+	<<[->+<],
+]
+
+create N many cells to the right (now record)
+>[[>]+[<]>-]
+
+count how many cells by moving record one to the left (recreates N at right side)
+>[<[->+<]++>>]
+
+move N into position
+<[->>>+<<<]>>>
+
+start loop
+[
+
+	Go to end of record
+	<<+<<
+
+	check value and move it to end of recordTemp
+	-[->>+<]>>
+	if it's 1
+	[
+
+		add N%2 to base
+			>[>>>++<[<+>>-[>>]<[>++>]<<-]+++>[-<->]<[->+<]
+		<[->+<]]
+		add 2 to base
+		>>++>+<<<
+		add one to pileCounter
+		[>>>+<<<]
+	]
+	>>
+	add one to base
+	+
+	add one to pileCounter
+	>+
+	Duplicate N to tileCounter
+	<<[-<+>>>>+<<<]<[->+<]
+
+	duplicate base to currentTile
+	>>[-<<+>>>>>>>>+<<<<<<]<<[->>+<<]
+
+	>>>>>>>>
+
+	spread currentTile over tileBuffer
+	[[>]+[<]>-]
+
+	duplicate tileCounter to gap2 and 4 spaces over from whatever is marked in tileBuffer
+	<<<<+
+	[
+		->+>>>>[>]>>>+<<<<[<]<<<<
+	]
+	Decrement tileCounter (and move it back into place)
+	>--[-<+>]
+
+	condense marker from tileBuffer back into currentTile
+	>>>>[>]<
+	[>[-<+>]<<]>[-<+>]
+
+	move to tileCounter
+	<<<<<
+	start loop
+	[
+		move to end of record
+		<<<<<[<]>
+		check if this bit doesn't match the previous bit
+		to do so
+			add them together and subtract two
+			[-<+<+>>]<[->+<]
+			<<[->+>+<<]>--
+			if it's 1 then they do not match (0 or 2 is matching)
+			[-<+>[-<->]]<
+		if so:
+		[
+			->>[>]>>>
+			check if pileCounter is 1 or 2
+			-
+			if 2
+			[
+				(to preserve pileCounter)
+				->>+
+				subtract one from currentTile
+				>>>-
+				if currentTile is 0:
+				[>]<<<
+					add 3
+					[>>>+++<<]
+				>
+			]
+			<
+			if 1
+			[
+				add one to currentTile
+				>>>>>>+
+				check if currentTile is 4
+				<++++>[-<->]
+				++++<[-<+>>-<]+<[[-]>-<]>
+				if so
+				[
+					set currentTile to 1
+					->---
+					<
+				]
+				<
+			]
+			restore pileCounter
+			<+[-<<+>>]
+			<<<<<<[<]
+		]
+		>>[>]>>(on base)
+
+		check if base = currentTile
+		duplicate base
+		[->>>+>>+<<<<<]>>>[-<<<+>>>]
+		>>>>>>+[<<<-<-<+[>]>>]>[<]
+		<<[[-<<+>>]>]
+		<[[-]>]
+		if so
+		<[
+			subtract one from pileCounter
+			<<<-
+			if pilecounter is 0
+				add 2 to pilecounter
+				[>>>>]>[<++>>>>>]<
+		]
+		<[->>+<<]>>>>>-<<<
+
+		spread currentTile over tileBuffer
+		[[>]+[<]>-]
+		>[>]<[>>>>]+[<<<<]
+		duplicate tileCounter to gap2 and whatever is marked in tileBuffer
+		<<<[>]<[>>>>+[>]<[>>>>]<<<<+[<<<<]<<<[>]<-]
+
+		move tileCounter back and decrement
+		>>>>-[-<<<<+>>>>]
+
+		condense marker from tileBuffer back into currentTile
+		>[>]<
+		[>[-<+>]<<]>[-<+>]
+
+
+		end on tileCounter
+		<<<<<
+	]
+
+	reset base pileCounter currentTile
+	<[-]<[-]
+	copy N to end of input
+		copy N over
+		<[->+>>>>>>>>>>>[>>>>]>[>>>>]>[>>>>]<<<+<[<<<<]<[<<<<]<[<<<<]<<<<<<<<]
+		>[-<+>]
+	set start of output to 1
+	>>>>>>>>>>
+	move to end of output
+	>[>>>>]>[>>>>]>[>>>>]<<<[->>+<<]>>>
+	create " " at end of output
+	>(8++++++++)[-<(4++++)>]<<<<
+	put pointer on end of output
+	add one
+	<<<<+
+	start loop
+	[
+		subtract 1
+		-
+		now we print out the tiles
+		>+>+>+
+		[
+			[>]>>[->>+>++<<<]>>[-<<+>>]>-<<<<<<[<]>-
+			if the cell is positive
+			[
+				move the cell over some
+				-[[>]>++>>>++[<]<[<]>-]
+				subtract this from 2N
+				>[>]>>>>-[->-<]>[--<+>>+<]>[-<+>]
+				print (result) many " "s
+				<<[-<.>]
+				print the cell number of "#"s
+				<+++<<-[->>.<<]>>---
+				<<<<[<]
+			]
+			print (result or N) many " "s
+			>[>]>>>>>+[-<<.>>]
+			<<<<<<[<]>
+		]
+		move N and " " over 4
+		>>[-<<<<+>>>>]>[-]<<<<
+
+		print newline
+		(10++++++++++).
+		>(7+++++++)[-<(3+++)>]<+
+
+		if the end of the output is 1 then end the loop else keep going
+		<<<+<<<<[[-]>>>>-<<<<]>>>>[-<<<<+>>>>]<<<<
+	]
+	delete printer
+	>>>>>>[-]>[-]
+
+	print new line
+	(10++++++++++).[-]
+
+	move to record
+	(16<<<<<<<<<<<<<<<<)[<]>
+
+	move record left two spaces
+	[[-<<+>>]>]
+
+	add one to record
+	<<<[<]>[-[>](2++)>]
+	<[-]>>>
+	if record overflows
+		exit loop
+	else
+		move to N
+]
+
+not necessary but for cleanup
+>[-]<<<<<[[-]<]<
+
+Ends at cell 0 with every cell = 0

@@ -22,7 +22,7 @@ Gets first input and puts it after the 255
 	gets all numbers and places them after the 255marker in order until it reaches a plus sign or EOF
 	for instance 12 will be placed after the 255marker like 255 2 3
 	[
-		(43-------------------------------------------)
+		>(6++++++)[<(7-------)>-]<-
 		[(4----)>>] < [>>>>] < [>,>] <
 	]
 	moves to the last digit of the inputted number
@@ -104,6 +104,6 @@ Add one to compensate for the above check
 >+
 Print out every number with added 47 to get it to ASCII
 [
-	(47+++++++++++++++++++++++++++++++++++++++++++++++)
-	.>
+	<[-](6++++++)[->(8++++++++)<]
+	>-.>
 ]

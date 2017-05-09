@@ -1,0 +1,62 @@
+Some tips:
+
+When incrementing or decrementing multi-digit numbers, always subtract until a number reaches 0.
+
+For instance, when incrementing a number, represent each digit by (10-digit). e.g. 148 will look like 962
+	This way, when the digit hits 10, the representation will equal 0, and it is easy to check whether the number is 0.
+	If it is 0, add 10 and decrement the next digit
+	A simple example:
+
+		Gets multi-digit number with each digit represented by (10-digit) in this format
+		1 0 0 n u m b e r 0 0
+		+>>>>,[<(+58)>[-<->]>,]
+		Moves the pointer to the initial 1
+		<<[<]<<
+		[
+			Moves the pointer to the last digit of the number
+			>>>[>]<
+			Increments the number carrying the one if necessary
+			[-[<](+10)<]
+			Removes the excess 10 from the end of the number and moves the pointer to the initial 1
+			>[-]<<
+		]
+
+	Once the number reaches 10^(length of the number) the loop exits
+
+	Here's a loop that counts forever, adding a 1 to the front of the number whenever it needs to:
+
+		Start from 0
+		>>>>(+10)
+		[
+			[-[[<]<](+10)>]
+			>
+			Removes the excess 10
+			[<<[-]>]
+			Adds a 1 to the front of the number if it needs to and moves it back to the same position as if it didn't
+			<<[>(+9)[<]<<]
+			>>>
+		]
+
+	The same looking format applies to decrementing, except every digit is now represented by (digit + 1) to avoid having 0s in the number. e.g. 148 will look like 259
+		This way when the number hits -1, the representation will be 0 and easy to check and carry the one
+		Unfortunately this means that loops will end at -1 rather than 0 so you have to decrement the number when initialising it
+
+		A simple example:
+			Gets a multi-digit number and decrements it until it reaches 0
+			This is basically the same as the incrementing example
+			+>>>,[(-47)>,]
+			Here's the initial decrement to get it to the right number
+			Note that when inputting 0 it will finish early
+			<[-[<](+10)<]
+			Removes the excess 10
+			>[-]
+			Moves the pointer to the initial 1
+			<<<
+			[
+				Moves the pointer to the last digit of the number
+				>>>[>]<
+				Decrements the number carrying the one if necessary
+				[-[<](+10)<]
+				Removes the excess 10 from the end of the number and moves the pointer to the initial 1
+				>[-]<<
+			]
