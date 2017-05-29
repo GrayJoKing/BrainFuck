@@ -1,0 +1,63 @@
+Brainfuck code generator
+By Jo King
+	Outputs every possible permutation of brainfuck code separated by newlines
+
+increments a multidigit base 8 number and then prints it out
+each number represents a different bf instruction
+
+8 = end loop
+7 = start loop
+6 = right
+5 = left
+4 = period
+3 = minus
+2 = comma
+1 = plus
+
+>>>>(8++++++++)
+
+[
+	print the state
+	[
+		<(7+++++++)[-<(6++++++)>]
+		>-
+		[
+			-<<+<+>>
+		]
+		<[>]>
+		[
+			-<<+<+>>
+		]
+		<[>]>
+		[
+			-<<+<+>>
+		]
+		<[>]>
+		[
+			-<<(14++++++++++++++)<+>>
+		]
+		<[>]>
+		[
+			-<<++<+>>
+		]
+		<[>]>
+		[
+			-<(6++++++)[-<(5+++++)>]<-<+>>
+		]
+		<[>]>
+		[
+			-<<++<+>>>
+		]
+		<<+.[-]<+>>>>
+	]
+	<<<<[[->>>+<<<]<]
+
+	(10++++++++++).[-]>>>>
+
+	increment the state
+
+	[-[[<]<](8++++++++)>]
+
+	>[<<[-]>]<<[>(8++++++++)[<]<<]
+	>>>
+]

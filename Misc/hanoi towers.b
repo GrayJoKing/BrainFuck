@@ -2,10 +2,11 @@ A brainfuck program that solves an inputted size Hanoi Tower
 By Jo King
 Non wrapping non negative cells
 Input a multi digit number up to your cell size
-Needs 5x plus 22 cells where x is the size of the tower
+Needs 5x plus 19 cells where x is the size of the tower
 WARNING:
 	Just like the Hanoi Tower this program will increase the number of instructions at a exponential rate
-	A tower of size 10 takes 21 million instructions
+	A tower of size 10 takes 16 million instructions
+	Size 12 takes 89 million
 
 Plan (note: this plan changed a lot in implementation)
 N = Inputted number
@@ -157,12 +158,13 @@ start loop
 	-[->>+<]>>
 	if it's 1
 	[
-		add N%2 to currentdisk and greaterTotal
-		>>>++<[<+>>-[>>]<[>++>]<<-]<[->+<]>>[->+<]+<<
+		add N%2 to currentdisk
+		>>>>++<<[>+>-[>>]<[>++>]<<<-]>[-<+>]
+		increment greaterTotal
+		+<<
 	]
-	>>>
 	add one to currentdisk and move into position
-	+[->>>>+<<<<]
+	>>>+[->>>>+<<<<]
 	Duplicate N to diskCounter
 	<<[-<+>>>+<<]<[->+<]
 
@@ -172,12 +174,12 @@ start loop
 	[[>]+[<]>-]
 
 	duplicate diskCounter to gap2 and 4 spaces over from whatever is marked in diskBuffer
-	<<<<+
+	<<<<
 	[
 		->+>>>>[>]>>>+<<<<[<]<<<<
 	]
 	Decrement diskCounter (and move it back into place)
-	>--[-<+>]
+	>-[-<+>]
 
 	condense marker from diskBuffer back into currentdisk
 	>>>>[>]<
@@ -243,10 +245,10 @@ start loop
 		[[>]+[<]>-]
 		>[>]<[>>>>]+[<<<<]>>>[<]
 		duplicate diskCounter to gap2 and whatever is marked in diskBuffer
-		<<<<[>>>>+[>]<[>>>>]<<<<+[<<<<]>>>[<]<<<-]
+		<<<<-[>>>>+[>]<[>>>>]<<<<+[<<<<]>>>[<]<<<-]
 
 		move diskCounter back and decrement
-		>>>>-[-<<<<+>>>>]
+		>>>>[-<<<<+>>>>]
 
 		condense marker from diskBuffer back into currentdisk
 		>[>]<
@@ -270,30 +272,19 @@ start loop
 	(8++++++++)[-<(4++++)>]<<<<[->>+<<]
 	put pointer on end of output
 	add one
-	<<<<+
+	+
 	start loop
 	[
-		subtract 1
-		-
+		subtract 1 and add 1 to all the disk spaces
+		-<+<+<+
 		now we print out the disks
-		>+>+>+
 		[
-			[>]>>[->>+>++<<<]>>[-<<+>>]>-<<<<<<[<]>-
-			if the cell is positive
-			[
-				move the cell over some
-				-[[>]>++>>>++[<]<[<]>-]
-				subtract this from 2N
-				>[>]>>>>-[->-<]>[--<+>>+<]>[-<+>]
-				print (result) many " "s
-				<<[-<.>]
-				print the cell number of "#"s
-				<+++<<-[->>.<<]>>---
-				<<<<[<]
-			]
-			print (result or N) many " "s
-			>[>]>>>>>+[-<<.>>]
-			<<<<<<[<]>
+			-[[>]>+<<[<]>-]>[>]>
+			[>-<<+>-]
+			>[->.<<+>]
+			<<[->>>+++<<<[>>+>..<<<-]>>+>.---.<<<]
+			>+[->+>.<<]
+			>-<<<[<]>
 		]
 		move N and " " over 4
 		>>[-<<<<+>>>>]>[-]<<<<
@@ -303,10 +294,10 @@ start loop
 		>(7+++++++)[-<(3+++)>]<+
 
 		if the end of the output is 1 then end the loop else keep going
-		<<<+<<<<[[-]>>>>-<<<<]>>>>[-<<<<+>>>>]<<<<
+		<<<+<<<<[[-]>>>>-<<<<]>>>>
 	]
 	delete printer
-	>>>>>>[-]>[-]
+	>>[-]>[-]
 
 	print new line
 	(10++++++++++).[-]
@@ -326,7 +317,7 @@ start loop
 		move to N
 ]
 
-not necessary but for cleanup
+not necessary but nice for cleanup
 >[-]<<<<<[[-]<]<
 
 Ends at cell 0 with every cell = 0
